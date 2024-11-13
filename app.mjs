@@ -8,6 +8,7 @@ const port = 4000;
 app.use(cors());
 app.use(express.json());
 app.use("/questions", questionRouter);
+app.use("/answers", answersRouter);
 app.get("/test", (req, res) => {
   return res.json("Server API is working 🚀");
 });

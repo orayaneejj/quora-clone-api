@@ -1,6 +1,7 @@
 import { Router } from "express";
 import pool from "../utils/db.mjs";
 const questionsRouter = Router();
+import { validateAnswerData } from "../middlewares/answer.validation.mjs";
 import { validateQuestionData } from "../middlewares/question.validation.mjs";
 // ดูคำถามทั้งหมด
 questionsRouter.get("/", async (req, res) => {
@@ -198,29 +199,33 @@ where questions.id = $1;`,
   }
 });
 //สร้างคอมเม้นตาม question id
-questionsRouter.post("/:questionId/answers", async (req, res) => {
-  try {
-    const newAnswer = {
-      ...req.body,
-    };
-    const questionId = req.params.questionId;
-    await pool.query(
-      `insert into answers (question_id,content)
+questionsRouter.post(
+  "/:questionId/answers",
+  validateAnswerData,
+  async (req, res) => {
+    try {
+      const newAnswer = {
+        ...req.body,
+      };
+      const questionId = req.params.questionId;
+      await pool.query(
+        `insert into answers (question_id,content)
 values ($1,$2)`,
-      [questionId, newAnswer.content]
-    );
+        [questionId, newAnswer.content]
+      );
 
-    return res.status(201).json({
-      message: "Answer created successfully.",
-    });
-  } catch (error) {
-    return res.status(500).json({
-      message: "Unable to create answers.",
-      error: error.message,
-    });
+      return res.status(201).json({
+        message: "Answer created successfully.",
+      });
+    } catch (error) {
+      return res.status(500).json({
+        message: "Unable to create answers.",
+        error: error.message,
+      });
+    }
   }
-});
-//โหวตเห็นด้วย ไม่เห็นด้วย
+);
+//โหวตเห็นด้วย ไม่เห็นด้วย ในคำถาม
 questionsRouter.post("/:questionId/vote", async (req, res) => {
   try {
     const questionId = req.params.questionId;
