@@ -2,9 +2,8 @@
 import * as pg from "pg";
 const { Pool } = pg.default;
 
-const connectionPool = new Pool({
-  connectionString:
-    "postgresql://your-db-username:your-db-password@localhost:5432/your-db-name",
+const pool = new Pool({
+  connectionString: "postgresql://postgres:3610@localhost:5432/quora",
 });
 
-export default connectionPool;
+export default pool;
