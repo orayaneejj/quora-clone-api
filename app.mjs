@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import questionRouter from "./routes/questions.mjs";
-
+import answersRouter from "./routes/answers.mjs";
 const app = express();
 const port = 4000;
 
