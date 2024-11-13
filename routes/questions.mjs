@@ -11,22 +11,22 @@ questionsRouter.get("/", async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Server could not read questions because database issue",
+      message: "Unable to fetch questions.",
       error: error.message,
     });
   }
 });
 
 //ดูคำถามจาก id
-questionsRouter.get("/:id", async (req, res) => {
+questionsRouter.get("/:questionId", async (req, res) => {
   try {
-    const questionIdFromClient = req.params.id;
+    const questionIdFromClient = req.params.questionId;
     const result = await pool.query(`select * from questions where id = $1`, [
       questionIdFromClient,
     ]);
     if (!result.rows[0]) {
       return res.status(404).json({
-        message: "Server could not find a requested question",
+        message: "Question not found.",
       });
     }
     return res.status(200).json({
@@ -34,7 +34,7 @@ questionsRouter.get("/:id", async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Server could not read questions because database issue",
+      message: "Unable to fetch questions.",
       error: error.message,
     });
   }
@@ -53,19 +53,19 @@ questionsRouter.post("/", validateQuestionData, async (req, res) => {
     );
 
     return res.status(201).json({
-      message: "Created questions successfully",
+      message: "Question created successfully.",
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Server could not create questions because of database issue",
+      message: "Unable to create question.",
       error: error.message,
     });
   }
 });
 //แก้ไขคำถาม จาก id
-questionsRouter.put("/:id", validateQuestionData, async (req, res) => {
+questionsRouter.put("/:questionId", validateQuestionData, async (req, res) => {
   try {
-    const questionIdFromClient = req.params.id;
+    const questionIdFromClient = req.params.questionId;
     const updatedQuestion = { ...req.body };
     const result = await pool.query(
       `
@@ -84,33 +84,35 @@ questionsRouter.put("/:id", validateQuestionData, async (req, res) => {
     );
     if (!result.rowCount) {
       return res.status(404).json({
-        message: "Server could not find a requested question to update",
+        message: "Question not found.",
       });
     }
-    return res.status(200).json({ message: "Updated question sucessfully" });
+    return res.status(200).json({ message: "Question updated successfully." });
   } catch (error) {
     return res.status(500).json({
-      message: "Server could not read question because database issue",
+      message: "Unable to fetch questions.",
       error: error.message,
     });
   }
 });
 //ลบคำถาม จาก id
-questionsRouter.delete("/:id", async (req, res) => {
+questionsRouter.delete("/:questionId", async (req, res) => {
   try {
-    const questionIdFromClient = req.params.id;
+    const questionIdFromClient = req.params.questionId;
     const result = await pool.query(`delete from questions where id = $1`, [
       questionIdFromClient,
     ]);
     if (!result.rowCount) {
       return res.status(404).json({
-        message: "Server could not find a requested question to delete",
+        message: "Question not found.",
       });
     }
-    return res.status(200).json({ message: "Deleted question sucessfully" });
+    return res
+      .status(200)
+      .json({ message: "Question post has been deleted successfully." });
   } catch (error) {
     return res.status(500).json({
-      message: "Server could not read question because database issue",
+      message: "Unable to delete question.",
       error: error.message,
     });
   }
