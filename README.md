@@ -29,14 +29,13 @@ This is an API for a platform similar to Quora, where users can ask questions, p
 
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+Follow these steps to set up and run the project locally. This guide will help you clone the repository, install dependencies, and start the server.
 
 ### Installation
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/github_username/repo_name.git
+   git clone git@github.com:orayaneejj/quora-clone-api.git
    ```
 2. Navigate into the project directory:
    ```sh
@@ -51,7 +50,9 @@ To get a local copy up and running follow these simple example steps.
    npm install
    npm install cors express nodemon pg
    ```
-
+5. Start the server:
+   ```sh
+   npm run start
 <!-- USAGE EXAMPLES -->
 
 ## Usage
