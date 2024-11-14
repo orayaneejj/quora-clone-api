@@ -6,7 +6,7 @@ import { validateQuestionData } from "../middlewares/question.validation.mjs";
 // ดูคำถามทั้งหมด
 questionsRouter.get("/", async (req, res) => {
   try {
-    const results = await pool.query(`select * from questions`);
+    const results = await pool.query(`select * from questions order by id asc`);
     return res.status(200).json({
       data: results.rows,
     });
@@ -38,8 +38,15 @@ questionsRouter.get("/search", async (req, res) => {
     if (conditions.length > 0) {
       query += ` where ` + conditions.join(" and ");
     }
-
+    query += " order by id asc";
     const results = await pool.query(query, values);
+
+    if (results.rows.length === 0) {
+      return res.status(404).json({
+        message: "No questions found matching the search criteria.",
+      });
+    }
+
     return res.status(200).json({
       data: results.rows,
     });
@@ -49,6 +56,7 @@ questionsRouter.get("/search", async (req, res) => {
       .json({ message: "Unable to fetch a question.", error: error.message });
   }
 });
+
 //ดูคำถามจาก id
 questionsRouter.get("/:questionId", async (req, res) => {
   try {
@@ -180,7 +188,7 @@ questionsRouter.get("/:questionId/answers", async (req, res) => {
       `select answers.id, answers.content as content
 from answers 
 inner join questions on questions.id = answers.question_id
-where questions.id = $1;`,
+where questions.id = $1 order by answers.id asc`,
       [questionIdFromClient]
     );
     if (!result.rows[0]) {
