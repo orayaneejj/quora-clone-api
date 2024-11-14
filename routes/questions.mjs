@@ -3,7 +3,7 @@ import pool from "../utils/db.mjs";
 const questionsRouter = Router();
 import { validateAnswerData } from "../middlewares/answer.validation.mjs";
 import { validateQuestionData } from "../middlewares/question.validation.mjs";
-// ดูคำถามทั้งหมด
+// View all questions
 questionsRouter.get("/", async (req, res) => {
   try {
     const results = await pool.query(`select * from questions order by id asc`);
@@ -17,7 +17,7 @@ questionsRouter.get("/", async (req, res) => {
     });
   }
 });
-//ค้นหาคำถามจากหัวข้อ หรือหมวดหมู่
+// Search questions from title or category
 questionsRouter.get("/search", async (req, res) => {
   try {
     const title = req.query.title;
@@ -57,7 +57,7 @@ questionsRouter.get("/search", async (req, res) => {
   }
 });
 
-//ดูคำถามจาก id
+// View question by id
 questionsRouter.get("/:questionId", async (req, res) => {
   try {
     const questionIdFromClient = req.params.questionId;
@@ -80,7 +80,7 @@ questionsRouter.get("/:questionId", async (req, res) => {
   }
 });
 
-//สร้างคำถาม
+// Create new question
 questionsRouter.post("/", validateQuestionData, async (req, res) => {
   const newAnswer = {
     ...req.body,
@@ -102,7 +102,7 @@ questionsRouter.post("/", validateQuestionData, async (req, res) => {
     });
   }
 });
-//แก้ไขคำถาม จาก id
+// Update question by id
 questionsRouter.put("/:questionId", validateQuestionData, async (req, res) => {
   try {
     const questionIdFromClient = req.params.questionId;
@@ -135,7 +135,7 @@ questionsRouter.put("/:questionId", validateQuestionData, async (req, res) => {
     });
   }
 });
-//ลบคำถาม จาก id
+// Delete question by id
 questionsRouter.delete("/:questionId", async (req, res) => {
   try {
     const questionIdFromClient = req.params.questionId;
@@ -157,7 +157,7 @@ questionsRouter.delete("/:questionId", async (req, res) => {
     });
   }
 });
-//ลบคอมเม้น
+// Delete answers by question id
 questionsRouter.delete("/:questionId/answers", async (req, res) => {
   try {
     const questionIdFromClient = req.params.questionId;
@@ -180,7 +180,7 @@ questionsRouter.delete("/:questionId/answers", async (req, res) => {
     });
   }
 });
-//ดูคอมเม้น ตาม question id
+// View answers by question id
 questionsRouter.get("/:questionId/answers", async (req, res) => {
   try {
     const questionIdFromClient = req.params.questionId;
@@ -206,7 +206,7 @@ where questions.id = $1 order by answers.id asc`,
     });
   }
 });
-//สร้างคอมเม้นตาม question id
+// Create answers by question id
 questionsRouter.post(
   "/:questionId/answers",
   validateAnswerData,
@@ -233,7 +233,7 @@ values ($1,$2)`,
     }
   }
 );
-//โหวตเห็นด้วย ไม่เห็นด้วย ในคำถาม
+// Vote for question
 questionsRouter.post("/:questionId/vote", async (req, res) => {
   try {
     const questionId = req.params.questionId;

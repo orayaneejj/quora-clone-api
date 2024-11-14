@@ -1,7 +1,7 @@
 import { Router } from "express";
 import pool from "../utils/db.mjs";
 const answersRouter = Router();
-//โหวตเห็นด้วย ไม่เห็นด้วย ในคอมเม้น
+// Vote for answer
 answersRouter.post("/:answersId/vote", async (req, res) => {
   try {
     const answersId = req.params.answersId;
